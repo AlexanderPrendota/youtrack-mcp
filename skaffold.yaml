@@ -6,7 +6,7 @@ build:
   tagPolicy:
     sha256: {}
   artifacts:
-  - image: registry.jetbrains.team/p/matterhorn/containers/youtrack-mcp
+  - image: registry.jetbrains.team/p/matterhorn/public/youtrack-mcp
     docker: {}
   local:
     useDockerCLI: false
