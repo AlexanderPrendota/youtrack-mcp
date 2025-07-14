@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta8
+kind: Config
+metadata:
+  name: youtrack-mcp
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: registry.jetbrains.team/p/ksk/containers/youtrack-mcp
+    docker: {}
+  local:
+    useDockerCLI: false
+    useBuildkit: true
