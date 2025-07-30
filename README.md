@@ -40,14 +40,14 @@ docker run -i --rm \
      -e YOUTRACK_URL=https://your-instance.youtrack.cloud \
      -e YOUTRACK_API_TOKEN=perm:your-api-token \
      -e YOUTRACK_CLOUD=true \
-     tonyzorin/youtrack-mcp:latest
+     registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
 
 # Or for self-hosted YouTrack instances
 docker run -i --rm \
      -e YOUTRACK_URL=https://your-instance.youtrack.cloud \
      -e YOUTRACK_API_TOKEN=your-api-token \
      -e YOUTRACK_CLOUD=false \
-     tonyzorin/youtrack-mcp:latest
+     registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
 ```
 
 For Cursor IDE, add to `.cursor/mcp.json`:
@@ -62,7 +62,7 @@ For Cursor IDE, add to `.cursor/mcp.json`:
             "-e", "YOUTRACK_URL=https://your-instance.youtrack.cloud",
             "-e", "YOUTRACK_API_TOKEN=perm:your-api-token", 
             "-e", "YOUTRACK_CLOUD=true",
-            "tonyzorin/youtrack-mcp:latest"
+            "registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest"
             ]
         }
     }
@@ -71,7 +71,7 @@ For Cursor IDE, add to `.cursor/mcp.json`:
 
 For Claude Desktop, set as MCP server:
 ```
-docker run -i --rm -e YOUTRACK_API_TOKEN=perm:your-api-token -e YOUTRACK_CLOUD=true tonyzorin/youtrack-mcp:latest
+docker run -i --rm -e YOUTRACK_API_TOKEN=perm:your-api-token -e YOUTRACK_CLOUD=true registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
 ```
 
 ## Installation & Usage
@@ -80,7 +80,7 @@ docker run -i --rm -e YOUTRACK_API_TOKEN=perm:your-api-token -e YOUTRACK_CLOUD=t
 
 1. Pull the Docker image:
    ```bash
-   docker pull tonyzorin/youtrack-mcp:latest
+   docker pull registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
    ```
 
 2. Run the container with your YouTrack credentials:
@@ -88,7 +88,7 @@ docker run -i --rm -e YOUTRACK_API_TOKEN=perm:your-api-token -e YOUTRACK_CLOUD=t
    docker run -i --rm \
      -e YOUTRACK_URL=https://your-instance.youtrack.cloud \
      -e YOUTRACK_API_TOKEN=your-api-token \
-     tonyzorin/youtrack-mcp:latest
+     registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
    ```
 
 ### Alternative: Build from Source
@@ -126,8 +126,8 @@ To build and push multi-architecture images (for both ARM64 and AMD64 platforms)
 2. Build and push for multiple platforms:
    ```bash
    docker buildx build --platform linux/amd64,linux/arm64 \
-     -t tonyzorin/youtrack-mcp:0.3.7 \
-     -t tonyzorin/youtrack-mcp:latest \
+     -t registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:0.3.7 \
+     -t registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest \
      --push .
    ```
 
@@ -159,7 +159,7 @@ To use your YouTrack MCP server with Cursor IDE:
                 "-e", "YOUTRACK_API_TOKEN=perm:your-api-token",
                 "-e", "YOUTRACK_URL=https://your-instance.youtrack.cloud",
                 "-e", "YOUTRACK_CLOUD=true",
-                "tonyzorin/youtrack-mcp:latest"
+                "registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest"
                 ]
             }
         }
@@ -189,7 +189,7 @@ To use with Claude Desktop:
                 "-e", "YOUTRACK_API_TOKEN=perm:your-api-token",
                 "-e", "YOUTRACK_URL=https://your-instance.youtrack.cloud",
                 "-e", "YOUTRACK_CLOUD=true",
-                "tonyzorin/youtrack-mcp:latest"
+                "registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest"
                 ]
             }
         }
@@ -214,7 +214,7 @@ To use the YouTrack MCP server with VS Code:
            "-e", "YOUTRACK_API_TOKEN=perm:your-api-token",
            "-e", "YOUTRACK_URL=https://your-instance.youtrack.cloud",
            "-e", "YOUTRACK_CLOUD=true",
-           "tonyzorin/youtrack-mcp:latest"
+           "registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest"
          ]
        }
      }
@@ -353,7 +353,7 @@ docker run -i --rm \
   -e YOUTRACK_URL=https://youtrack.internal.company.com \
   -e YOUTRACK_API_TOKEN=perm:your-permanent-token \
   -e YOUTRACK_VERIFY_SSL=false \
-  tonyzorin/youtrack-mcp:latest
+  registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
 ```
 
 This option is only recommended for development or in controlled environments where you cannot add the certificate to the trust store.
@@ -367,5 +367,5 @@ docker run -i --rm \
   -e YOUTRACK_URL=https://your-instance.youtrack.cloud \
   -e YOUTRACK_API_TOKEN=perm:your-permanent-token \
   -e MCP_DEBUG=true \
-  tonyzorin/youtrack-mcp:latest
+  registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
 ```
