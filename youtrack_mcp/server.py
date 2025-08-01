@@ -45,11 +45,15 @@ class YouTrackMCPServer:
         self.transport_mode = transport
         
         # Initialize server with ToolServerBase
+        # The FastMCP class doesn't accept 'transport' parameter directly
         self.server = ToolServerBase(
             name=config.MCP_SERVER_NAME,
-            instructions=config.MCP_SERVER_DESCRIPTION,
-            transport=transport  # ToolServerBase expects 'transport' parameter
+            instructions=config.MCP_SERVER_DESCRIPTION
         )
+        
+        # Configure transport separately if needed
+        if hasattr(self.server, 'set_transport') and transport:
+            self.server.set_transport(transport)
         
         # Initialize tool registry
         self._tools: Dict[str, Callable] = {}

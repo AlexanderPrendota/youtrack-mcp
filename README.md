@@ -340,6 +340,8 @@ The server can be configured via environment variables:
 | `YOUTRACK_URL` | YouTrack instance URL | (required) |
 | `YOUTRACK_API_TOKEN` | YouTrack permanent API token | (required) |
 | `YOUTRACK_VERIFY_SSL` | Verify SSL certificates | `true` |
+| `YOUTRACK_AUTH` | Enable token-based authentication for HTTP transport | `false` |
+| `YOUTRACK_MCP_AUTH_TOKEN` | Authentication token for HTTP transport (required if YOUTRACK_AUTH=true) | `""` |
 | `MCP_SERVER_NAME` | Name of the MCP server | `youtrack-mcp` |
 | `MCP_SERVER_DESCRIPTION` | Description of the MCP server | `YouTrack MCP Server` |
 | `MCP_DEBUG` | Enable debug logging | `false` |
@@ -368,4 +370,109 @@ docker run -i --rm \
   -e YOUTRACK_API_TOKEN=perm:your-permanent-token \
   -e MCP_DEBUG=true \
   registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
+```
+
+### HTTP Transport Authentication
+
+When using the YouTrack MCP server with HTTP transport, you can enable token-based authentication to secure access to the API:
+
+1. Set `YOUTRACK_AUTH=true` to enable authentication
+2. Set `YOUTRACK_MCP_AUTH_TOKEN` to a secure token value
+
+#### Running with Docker
+
+```bash
+docker run -i --rm \
+  -e YOUTRACK_URL=https://your-instance.youtrack.cloud \
+  -e YOUTRACK_API_TOKEN=perm:your-permanent-token \
+  -e YOUTRACK_CLOUD=false \
+  -e YOUTRACK_AUTH=true \
+  -e YOUTRACK_MCP_AUTH_TOKEN=your-secure-token \
+  registry.jetbrains.team/p/matterhorn/public/youtrack-mcp:latest
+```
+
+#### Running Locally with .env File
+
+For local development, you can use a `.env` file to configure the server:
+
+1. Create a `.env` file in the project root directory with the following content:
+
+```
+# YouTrack API configuration
+YOUTRACK_URL=https://your-instance.youtrack.cloud
+YOUTRACK_API_TOKEN=perm:your-permanent-token
+YOUTRACK_CLOUD=false
+
+# Authentication configuration
+YOUTRACK_AUTH=true
+YOUTRACK_MCP_AUTH_TOKEN=your-secure-token
+
+# Optional configuration
+MCP_DEBUG=true
+```
+
+2. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Run the server:
+
+```bash
+python main.py
+```
+
+The server will start on http://localhost:8000 by default.
+
+#### Testing Authentication
+
+You can test if authentication is working correctly using the included test script:
+
+```bash
+# Test with valid token
+python test_auth.py --url http://localhost:8000 --token your-secure-token
+
+# Test with invalid token
+python test_auth.py --url http://localhost:8000 --token wrong-token
+
+# Test without token
+python test_auth.py --url http://localhost:8000
+```
+
+#### Client Configuration
+
+When authentication is enabled, clients must include the token in the Authorization header:
+
+```json
+{
+  "mcpServers": {
+    "youtrack": {
+      "transport": {
+        "type": "http",
+        "url": "http://localhost:8000/api/mcp",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer your-secure-token"
+        }
+      }
+    }
+  }
+}
+```
+
+If the token doesn't match, the server will return a 403 Forbidden error.
+
+#### Example: Using with curl
+
+You can test the authenticated API using curl:
+
+```bash
+# List all available tools (with authentication)
+curl -H "Authorization: Bearer your-secure-token" http://localhost:8000/api/tools
+
+# Execute a specific tool (with authentication)
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer your-secure-token" \
+  -d '{"arguments": {"issue_id": "DEMO-123"}}' \
+  http://localhost:8000/api/tools/get_issue
 ```

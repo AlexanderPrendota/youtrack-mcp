@@ -109,6 +109,25 @@ async def execute_tool(tool_name: str, request: Request):
         Tool execution result
     """
     try:
+        # Check authentication if YOUTRACK_AUTH is enabled
+        if config.YOUTRACK_AUTH:
+            auth_header = request.headers.get("Authorization", "")
+            if not auth_header.startswith("Bearer "):
+                return JSONResponse(
+                    status_code=401,
+                    content={"error": "Authorization header with Bearer token is required"}
+                )
+            
+            # Extract token from header
+            token = auth_header.replace("Bearer ", "")
+            
+            # Validate token
+            if token != config.YOUTRACK_MCP_AUTH_TOKEN:
+                return JSONResponse(
+                    status_code=403,
+                    content={"error": "Invalid authorization token"}
+                )
+        
         # Get tool from registry
         if tool_name not in tools:
             return JSONResponse(
@@ -133,13 +152,35 @@ async def execute_tool(tool_name: str, request: Request):
         )
 
 @app.get("/api/tools")
-async def list_tools():
+async def list_tools(request: Request):
     """
     List all available tools.
     
+    Args:
+        request: The request object
+        
     Returns:
         List of available tools with their definitions
     """
+    # Check authentication if YOUTRACK_AUTH is enabled
+    if config.YOUTRACK_AUTH:
+        auth_header = request.headers.get("Authorization", "")
+        if not auth_header.startswith("Bearer "):
+            return JSONResponse(
+                status_code=401,
+                content={"error": "Authorization header with Bearer token is required"}
+            )
+        
+        # Extract token from header
+        token = auth_header.replace("Bearer ", "")
+        
+        # Validate token
+        if token != config.YOUTRACK_MCP_AUTH_TOKEN:
+            return JSONResponse(
+                status_code=403,
+                content={"error": "Invalid authorization token"}
+            )
+    
     tool_definitions = {}
     
     for name, tool_func in tools.items():

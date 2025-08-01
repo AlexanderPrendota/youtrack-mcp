@@ -35,6 +35,10 @@ class Config:
     MCP_SERVER_DESCRIPTION: str = os.getenv("MCP_SERVER_DESCRIPTION", "YouTrack MCP Server")
     MCP_DEBUG: bool = os.getenv("MCP_DEBUG", "false").lower() in ("true", "1", "yes")
     
+    # Authentication configuration
+    YOUTRACK_AUTH: bool = os.getenv("YOUTRACK_AUTH", "false").lower() in ("true", "1", "yes")
+    YOUTRACK_MCP_AUTH_TOKEN: str = os.getenv("YOUTRACK_MCP_AUTH_TOKEN", "")
+    
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> None:
         """
@@ -67,6 +71,10 @@ class Config:
         # If URL is provided, ensure it doesn't end with a trailing slash
         if cls.YOUTRACK_URL:
             cls.YOUTRACK_URL = cls.YOUTRACK_URL.rstrip("/")
+            
+        # If YOUTRACK_AUTH is enabled, MCP_AUTH_TOKEN is required
+        if cls.YOUTRACK_AUTH and not cls.YOUTRACK_MCP_AUTH_TOKEN:
+            raise ValueError("YOUTRACK_MCP_AUTH_TOKEN is required when YOUTRACK_AUTH is enabled. Provide it using YOUTRACK_MCP_AUTH_TOKEN environment variable.")
     
     @classmethod
     def get_ssl_context(cls) -> Optional[ssl.SSLContext]:
